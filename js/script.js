@@ -1,18 +1,13 @@
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * max) + min;
+Math.__proto__ = {
+    rand: function (min, max) {
+        return Math.floor(Math.random() * max) + min;
+    }
 }
 
 
 function Part(x, y) {
     this.x = x;
     this.y = y;
-    this.toString = function () {
-        return this.x + "_" + this.y;
-    }
-
-    this.toArray = function () {
-        return [this.x, this.y];
-    }
 
     this.copy = function () {
         return new Part(this.x, this.y)
@@ -31,8 +26,8 @@ function Part(x, y) {
 var snake = {
     context: null,              //canvas
     interval: null,
-    speed: 200,                 //швидкість руху
-    scale: 10,                  //масштаб
+    speed: 150,                 //швидкість руху
+    scale: 20,                  //масштаб
     fieldWidth: window.innerWidth,             //розмір поля
     fieldheignt: window.innerHeight,             //розмір поля
     direction: 'down',         //напрямок руху
@@ -55,7 +50,7 @@ var snake = {
     food: {
         food: null,
         plant: function () {
-            snake.food.food = new Part(getRandomInt(1, snake.fieldWidth / snake.scale), getRandomInt(1, snake.fieldheignt / snake.scale));
+            snake.food.food = new Part(Math.rand(1, snake.fieldSizeX), Math.rand(1, snake.fieldSizeY));
             snake.display([snake.food.food]);
         }
     },
@@ -64,9 +59,8 @@ var snake = {
     init: function (context) {
         var _self = this;
 
-        _self.sizex = snake.fieldWidth / snake.scale;
-        console.log(_self.sizex);
-        _self.sizey = snake.fieldheignt / snake.scale;
+        _self.fieldSizeX = _self.fieldWidth / _self.scale;
+        _self.fieldSizeY = _self.fieldheignt / _self.scale;
         _self.context = context;
 
         _self.food.plant();
@@ -116,10 +110,10 @@ var snake = {
 
     },
     display: function (data) {
-        var _self = this
+        var _self = this;
         data.forEach(function (e, i, a) {
-            var size = snake.scale - 1;
-            _self.context.fillRect(e.x * snake.scale, e.y * snake.scale, size, size);
+            var size = snake.scale - 2;
+            _self.context.fillRect(e.x * _self.scale, e.y * _self.scale, size, size);
         })
     },
     clear: function () {
@@ -131,7 +125,15 @@ var snake = {
         this.clear();
         this.display(this.parts);
         this.display([this.food.food]);
+        this.displayScore();
+    },
 
+    displayScore: function () {
+        var score = this.parts.length - 5;
+        this.context.fillStyle = '#000';
+        this.context.font = 'italic 20px sans-serif';
+        this.context.textBaseline = 'top';
+        this.context.fillText('Score: ' + score, 5, 5);
     },
 
     changeDirection: function (newDirection) {
@@ -148,19 +150,22 @@ var snake = {
 
     eatFood: function () {
         this.parts.push(this.parts[0].copy());
+
+        return this;
     },
 
     mayBeEnd: function () {
-        var head = snake.parts[0].copy();
-        for (var i = 2; i < snake.parts.length; i++) {
-            if (head.compare(snake.parts[i])) {
+        var _self = this;
+        var head = _self.parts[0].copy();
+        for (var i = 2; i < _self.parts.length; i++) {
+            if (head.compare(_self.parts[i])) {
                 console.log('end');
-                return snake.theEnd();
+                return _self.theEnd();
             }
 
-            if (head.x < 0 || head.y < 0 || head.x > snake.sizex || head.y > snake.sizey) {
+            if (head.x < 0 || head.y < 0 || head.x > _self.fieldSizeX || head.y > _self.fieldSizeY) {
                 console.log('end2');
-                return snake.theEnd();
+                return _self.theEnd();
             }
 
         }
@@ -172,8 +177,8 @@ var snake = {
         this.clear();
         this.context.fillStyle = '#000';
         this.context.font = 'italic 50px sans-serif';
-        //this.context.textBaseline = 'top';
-        this.context.fillText('You are Loser!!!!!!', 50, 50);
+        this.context.textBaseline = 'top';
+        this.context.fillText('You are Loser!', this.fieldWidth / 2 - 150, this.fieldheignt / 2);
         clearInterval(this.interval);
         return true;
     }
