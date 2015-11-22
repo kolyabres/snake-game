@@ -53,23 +53,7 @@
 
     var body = document.getElementById('body');
     body.onkeyup = function (d) {
-        var direction = null;
-        switch (d.which) {
-            case 37:
-                direction = 'left';
-                break;
-            case 39:
-                direction = 'right';
-                break;
-            case 38:
-                direction = 'up';
-                break;
-            case 40:
-                direction = 'down';
-                break;
-        }
-        if (direction)
-            snake.changeDirection(direction)
+        snake.changeDirectionButton(d.which)
     }
 
 

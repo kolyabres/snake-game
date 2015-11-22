@@ -16,9 +16,7 @@ function Part(x, y) {
 
     //порівняння координат двох частин
     this.compare = function (el) {
-        if (this.x !== el.x) return false;
-        if (this.y !== el.y) return false;
-        return true;
+        return (this.x == el.x && this.y == el.y);
     }
 
 }
@@ -44,6 +42,12 @@ var snake = {
         down: 'up',
         left: 'right',
         right: 'left'
+    },
+    buttonsDirections: {
+        37: 'left',
+        38: 'up',
+        39: 'right',
+        40: 'down',
     },
 
 
@@ -143,6 +147,13 @@ var snake = {
         this.nextDirection = newDirection;
         return this;
     },
+
+    changeDirectionButton: function (k) {
+        console.log(this.buttonsDirections[k]);
+        if (this.buttonsDirections[k])
+            this.changeDirection(this.buttonsDirections[k])
+    },
+
 
     findFood: function () {
         return this.parts[0].compare(this.food.food);
