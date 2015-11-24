@@ -31,7 +31,7 @@
         if (elem && elem.getContext('2d')) {
             var context = elem.getContext('2d');
             if (context) {
-                snake.init(context)
+                window.snake = new Snake(context)
             }
         }
     });
@@ -53,7 +53,7 @@
 
     var body = document.getElementById('body');
     body.onkeyup = function (d) {
-        snake.changeDirectionButton(d.which)
+        window.snake.changeDirectionButton(d.which)
     }
 
 
