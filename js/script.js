@@ -77,7 +77,7 @@ Snake.prototype = {
 
 
     plantFood: function () {
-        this.food = new Part(Math.rand(1, this.fieldSizeX), Math.rand(1, this.fieldSizeY));
+        this.food = new Part(Math.rand(1, this.fieldSizeX-1), Math.rand(1, this.fieldSizeY-1));
         this.display([this.food]);
     },
     move: function () {
